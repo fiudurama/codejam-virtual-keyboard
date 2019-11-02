@@ -20,7 +20,7 @@ function styles() {
 	return gulp.src(cssFiles)
 	.pipe(sourcemaps.init())
 	.pipe(sass().on('error', sass.logError))
-	.pipe(concat('style.css'))
+	.pipe(concat('styles.css'))
 	.pipe(cleanCSS({
 		level: 2
 	}))
