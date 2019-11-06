@@ -115,11 +115,6 @@ const Keyboard = {
 					keyEl.textContent = key[language];
 					keyEl.classList.add('keyboard__key--size-2');
 
-					keyEl.addEventListener('click', () => {
-						this.properties.value = this.properties.value.slice(0, this.properties.value.length - 1);
-						this._onInput();
-					});
-
 					document.addEventListener('keydown', event => {
 						if ( event.code === key.code ) {
 							event.preventDefault();
@@ -136,16 +131,18 @@ const Keyboard = {
 						};
 					});
 
+					keyEl.addEventListener('mousedown', () => {
+						keyEl.classList.add('keyboard__key--pressed');
+
+						this.properties.value = this.properties.value.slice(0, this.properties.value.length - 1);
+						this._onInput();
+					});
+
 					break;
 
 				case 'tab':
 					keyEl.textContent = key[language];
 					keyEl.classList.add('keyboard__key--size-2');
-
-					keyEl.addEventListener('click', () => {
-						this.properties.value += '\t';
-						this._onInput();
-					});
 
 					document.addEventListener('keydown', event => {
 						if (event.code === key.code) {
@@ -162,6 +159,13 @@ const Keyboard = {
 						if (event.code === key.code) {
 							keyEl.classList.remove('keyboard__key--pressed');
 						};
+					});
+
+					keyEl.addEventListener('mousedown', () => {
+						keyEl.classList.add('keyboard__key--pressed');
+
+						this.properties.value += '\t';
+						this._onInput();
 					});
 
 					break;
@@ -190,11 +194,6 @@ const Keyboard = {
 					keyEl.textContent = key[language];
 					keyEl.classList.add('keyboard__key--size-2');
 
-					keyEl.addEventListener('click', () => {
-						this.properties.value += '\n';
-						this._onInput();
-					});
-
 					document.addEventListener('keydown', event => {
 						if (event.code === key.code) {
 							event.preventDefault();
@@ -210,17 +209,19 @@ const Keyboard = {
 							keyEl.classList.remove('keyboard__key--pressed');
 						}
 					});
+					
+					keyEl.addEventListener('mousedown', () => {
+						keyEl.classList.add('keyboard__key--pressed');
+
+						this.properties.value += '\n';
+						this._onInput();
+					});
 
 					break;
 
 				case 'space':
 					keyEl.textContent = key[language];
 					keyEl.classList.add('keyboard__key--space');
-
-					keyEl.addEventListener('click', () => {
-						this.properties.value += ' ';
-						this._onInput();
-					});
 
 					document.addEventListener('keydown', event => {
 						if (event.code === key.code) {
@@ -236,6 +237,13 @@ const Keyboard = {
 						if (event.code === key.code) {
 							keyEl.classList.remove('keyboard__key--pressed');
 						}
+					});
+
+					keyEl.addEventListener('mousedown', () => {
+						keyEl.classList.add('keyboard__key--pressed');
+
+						this.properties.value += ' ';
+						this._onInput();
 					});
 
 					break;
@@ -257,6 +265,11 @@ const Keyboard = {
 							keyEl.classList.remove('keyboard__key--pressed');
 						}
 					});
+
+					keyEl.addEventListener('mousedown', () => {
+						keyEl.classList.add('keyboard__key--pressed');
+					});
+
 					break;
 
 				case 'shift':
@@ -277,6 +290,10 @@ const Keyboard = {
 							keyEl.classList.remove('keyboard__key--pressed');
 							this._charTypeToggle(this.properties.language);
 						};
+					});
+					
+					keyEl.addEventListener('mousedown', () => {
+						keyEl.classList.add('keyboard__key--pressed');
 					});
 
 					break;
@@ -304,6 +321,10 @@ const Keyboard = {
 						}
 					});
 
+					keyEl.addEventListener('mousedown', () => {
+						keyEl.classList.add('keyboard__key--pressed');
+					});
+
 					break;
 			
 				default:
@@ -328,13 +349,24 @@ const Keyboard = {
 							keyEl.classList.remove('keyboard__key--pressed');
 						};
 					});
+					
+					keyEl.addEventListener('mousedown', () => {
+						keyEl.classList.add('keyboard__key--pressed');
 
-					keyEl.addEventListener('click', () => {
 						this.properties.value += this.properties.capsLock ? key[language].toUpperCase() : key[language].toLowerCase();
 						this._onInput();
 					});
+
 					break;
 			};
+
+			keyEl.addEventListener('mouseup', () => {
+				keyEl.classList.remove('keyboard__key--pressed');
+			});
+
+			keyEl.addEventListener('mouseleave', () => {
+				keyEl.classList.remove('keyboard__key--pressed');
+			});
 
 			fragment.appendChild(keyEl);
 
