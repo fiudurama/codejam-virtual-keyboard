@@ -24,6 +24,7 @@ html {
 		outline: none;
 		background: #013145;
 		color: #fff;
+		transition: all .2s ease;
 
 		&--size-2 {
 			width: 104px;
@@ -39,6 +40,7 @@ html {
 
 		&--pressed {
 			background: #000;
+			border-radius: 25px;;
 		}
 	}
 }
