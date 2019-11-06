@@ -784,7 +784,7 @@ const Keyboard = {
 
   languageToggle(language) {
     if (event.shiftKey && event.ctrlKey) {
-      switch (localStorage.getItem('language')) {
+      switch (this.properties.language) {
         case 'en':
           localStorage.setItem('language', 'ru');
           break;
