@@ -1,0 +1,56 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	font: 100%/1.4 'Trebuchet MS', Arial, sans-serif;
+}
+
+.keyboard {
+	width: 820px;
+	margin: 20px auto 0;
+
+	&__key {
+		display: inline-flex;
+		width: 50px;
+		height: 50px;
+		margin: 0px 4px 4px 0;
+		border: none;
+		justify-content: center;
+		align-items: center;
+		border-radius: 4px;
+		outline: none;
+		background: #013145;
+		color: #fff;
+		transition: all .2s ease;
+
+		&--size-2 {
+			width: 104px;
+		}
+
+		&--size-3 {
+			width: 74px;
+		}
+
+		&--space {
+			width: 327px;
+		}
+
+		&--pressed {
+			background: #000;
+			border-radius: 25px;;
+		}
+	}
+}
+
+.keyboard-output {
+	display: block;
+	width: 820px;
+	height: 300px;
+	border: 1px solid #013145;
+	margin: 20px auto 0;
+	padding: 10px;
+	font-family: 'Trebuchet MS', Arial, sans-serif;
+}
