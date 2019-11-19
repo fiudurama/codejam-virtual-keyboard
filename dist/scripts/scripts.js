@@ -1,5 +1,4 @@
 /* global event, localStorage, document, window */
-/* eslint max-len: ["error", { "code": 190 }] */
 
 const Keyboard = {
   elements: {
@@ -12,6 +11,8 @@ const Keyboard = {
     value: '',
     language: 'en',
     capsLock: false,
+    shiftKeyPressed: false,
+    specKeys: ['backspace', 'enter', 'tab', 'capslock', 'shift', 'space', 'win', 'alt', 'ctrl', 'up', 'down', 'left', 'right'],
     keyLayout: [
       {
         keyCode: 192,
@@ -457,6 +458,29 @@ const Keyboard = {
 
     document.body.appendChild(this.elements.textarea);
     document.body.appendChild(this.elements.main);
+
+    this.elements.main.addEventListener('mousedown', (event) => {
+      const specKeys = this.properties.specKeys.indexOf(event.target.textContent) === -1;
+
+      if (specKeys && event.target.classList.contains('keyboard__key')) {
+        event.target.classList.add('keyboard__key--pressed');
+
+        this.properties.value += event.target.textContent;
+        this.onInput();
+      }
+    });
+
+    this.elements.main.addEventListener('mouseup', () => {
+      if (event.target.classList.contains('keyboard__key')) {
+        event.target.classList.remove('keyboard__key--pressed');
+      }
+    });
+
+    this.elements.main.addEventListener('mouseleave', () => {
+      if (event.target.classList.contains('keyboard__key')) {
+        event.target.classList.remove('keyboard__key--pressed');
+      }
+    });
   },
 
   createKeyboard(language) {
@@ -464,13 +488,12 @@ const Keyboard = {
 
     this.properties.keyLayout.forEach((key, i) => {
       const keyEl = document.createElement('button');
-      const insertBrAfter = [8, 220, 13, 38].indexOf(key.keyCode) !== -1;
+      const insertBrAfter = ['backspace', '\\', 'enter', 'up'].indexOf(key.en) !== -1;
 
       keyEl.classList.add('keyboard__key');
 
       document.addEventListener('keydown', () => {
         if (i === 0) {
-          // console.log(event);
           this.languageToggle(this.properties.language);
         }
       });
@@ -658,7 +681,14 @@ const Keyboard = {
           });
 
           keyEl.addEventListener('mousedown', () => {
+            this.properties.shiftKeyPressed = true;
             keyEl.classList.add('keyboard__key--pressed');
+            this.charTypeToggle(this.properties.language);
+          });
+
+          keyEl.addEventListener('mouseup', () => {
+            this.properties.shiftKeyPressed = false;
+            this.charTypeToggle(this.properties.language);
           });
 
           break;
@@ -698,7 +728,7 @@ const Keyboard = {
             if (event.keyCode === key.keyCode) {
               keyEl.classList.add('keyboard__key--pressed');
 
-              if (event.shiftKey) {
+              if (event.shiftKey || this.properties.shiftKeyPressed) {
                 if (this.properties.capsLock) {
                   this.properties.value += key[`${this.properties.language}Modified`].toLowerCase();
                 } else {
@@ -717,23 +747,8 @@ const Keyboard = {
             }
           });
 
-          keyEl.addEventListener('mousedown', () => {
-            keyEl.classList.add('keyboard__key--pressed');
-
-            this.properties.value += this.properties.capsLock ? key[language].toUpperCase() : key[language].toLowerCase();
-            this.onInput();
-          });
-
           break;
       }
-
-      keyEl.addEventListener('mouseup', () => {
-        keyEl.classList.remove('keyboard__key--pressed');
-      });
-
-      keyEl.addEventListener('mouseleave', () => {
-        keyEl.classList.remove('keyboard__key--pressed');
-      });
 
       fragment.appendChild(keyEl);
 
@@ -755,8 +770,7 @@ const Keyboard = {
     this.properties.capsLock = !this.properties.capsLock;
 
     for (const key of this.elements.keys) {
-      const specKeys = ['backspace', 'enter', 'tab', 'capslock', 'shift', 'space', 'win', 'alt', 'ctrl', 'up', 'down', 'left', 'right']
-        .indexOf(key.textContent.toLowerCase()) === -1;
+      const specKeys = this.properties.specKeys.indexOf(key.textContent.toLowerCase()) === -1;
 
       if (specKeys) {
         key.textContent = this.properties.capsLock ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
@@ -767,14 +781,18 @@ const Keyboard = {
   charTypeToggle(language) {
     let i = 0;
     for (const key of this.elements.keys) {
-      const specKeys = ['backspace', 'enter', 'tab', 'capslock', 'shift', 'space', 'win', 'alt', 'ctrl', 'up', 'down', 'left', 'right'].indexOf(key.textContent.toLowerCase()) === -1;
+      const specKeys = this.properties.specKeys.indexOf(key.textContent.toLowerCase()) === -1;
       const keyLayout = this.properties.keyLayout;
 
       if (specKeys) {
-        if (event.shiftKey) {
-          key.textContent = this.properties.capsLock ? keyLayout[i][`${language}Modified`].toLowerCase() : keyLayout[i][`${language}Modified`].toUpperCase();
+        if (event.shiftKey || this.properties.shiftKeyPressed) {
+          key.textContent = this.properties.capsLock
+            ? keyLayout[i][`${language}Modified`].toLowerCase()
+            : keyLayout[i][`${language}Modified`].toUpperCase();
         } else {
-          key.textContent = this.properties.capsLock ? keyLayout[i][language].toUpperCase() : keyLayout[i][language].toLowerCase();
+          key.textContent = this.properties.capsLock
+            ? keyLayout[i][language].toUpperCase()
+            : keyLayout[i][language].toLowerCase();
         }
       }
 
@@ -800,7 +818,7 @@ const Keyboard = {
 
       let i = 0;
       for (const key of this.elements.keys) {
-        const specKeys = ['backspace', 'enter', 'tab', 'capslock', 'shift', 'space', 'win', 'alt', 'ctrl', 'up', 'down', 'left', 'right'].indexOf(key.textContent.toLowerCase()) === -1;
+        const specKeys = this.properties.specKeys.indexOf(key.textContent.toLowerCase()) === -1;
         const keyLayout = this.properties.keyLayout;
 
         if (specKeys) {
